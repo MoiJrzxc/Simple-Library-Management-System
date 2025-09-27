@@ -1,4 +1,5 @@
 <?php
+
 // Handle role selection
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $role = $_POST['role'];
@@ -34,6 +35,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <br><br>
 
     <button type="submit">Enter</button>
+</form>
+
+</body>
+</html>
+</button>
 </form>
 
 </body>
