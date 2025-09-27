@@ -3,7 +3,15 @@
 <html>
 <head>
     <title>Library Manager</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form, table { margin-bottom: 20px; }
+        table { border-collapse: collapse; width: 80%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #eee; }
+        input[type=text], input[type=number] { padding: 5px; margin: 5px; }
+        button { padding: 6px 10px; cursor: pointer; }
+    </style>
 </head>
 <body>
 
@@ -34,7 +42,7 @@ if (isset($_GET['search']) && $_GET['search'] !== "") {
 
 $result = $conn->query($sql);
 
-echo "<table border='1'>
+echo "<table>
 <tr>
     <th>Title</th>
     <th>Author</th>
@@ -58,11 +66,9 @@ if ($result->num_rows > 0) {
 } else {
     echo "<tr><td colspan='4'>No books found</td></tr>";
 }
-
 echo "</table>";
 
 $conn->close();
 ?>
-
 </body>
 </html>

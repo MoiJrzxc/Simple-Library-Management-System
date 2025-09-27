@@ -3,7 +3,15 @@
 <html>
 <head>
     <title>Library User</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form, table { margin-bottom: 20px; }
+        table { border-collapse: collapse; width: 80%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #eee; }
+        input[type=text], input[type=number] { padding: 5px; margin: 5px; }
+        button { padding: 6px 10px; cursor: pointer; }
+    </style>
 </head>
 <body>
 
@@ -23,7 +31,7 @@ if (isset($_GET['error']) && $_GET['error'] === 'already_borrowed')
 
 <?php
 $search = "";
-if (isset($_GET['search'])) {
+if (isset($_GET['search']) && $_GET['search'] !== "") {
     $search = $conn->real_escape_string($_GET['search']);
     $sql = "SELECT * FROM books WHERE title LIKE '%$search%' OR author LIKE '%$search%'";
 } else {
@@ -32,7 +40,7 @@ if (isset($_GET['search'])) {
 
 $result = $conn->query($sql);
 
-echo "<table border='1'>
+echo "<table>
 <tr>
     <th>Title</th>
     <th>Author</th>
@@ -49,23 +57,22 @@ if ($result->num_rows > 0) {
         $isBorrowed = $borrow_check->num_rows > 0;
 
         echo "<tr>
-            <td>{$row['title']}</td>
-            <td>{$row['author']}</td>
-            <td>{$row['year']}</td>
+            <td>" . htmlspecialchars($row['title']) . "</td>
+            <td>" . htmlspecialchars($row['author']) . "</td>
+            <td>" . htmlspecialchars($row['year']) . "</td>
             <td>";
 
-      if (!$isBorrowed) {
-    echo "<form method='post' action='borrowBooks.php' style='display:inline-block;'>
-            <input type='hidden' name='book_id' value='{$book_id}'>
-            <button type='submit'>Borrow</button>
-          </form>";
-} else {
-    echo "<form method='post' action='returnBooks.php' style='display:inline-block;'>
-            <input type='hidden' name='book_id' value='{$book_id}'>
-            <button type='submit'>Return</button>
-          </form>";
-}
-
+        if (!$isBorrowed) {
+            echo "<form method='post' action='borrowBooks.php' style='display:inline-block;'>
+                    <input type='hidden' name='book_id' value='{$book_id}'>
+                    <button type='submit'>Borrow</button>
+                  </form>";
+        } else {
+            echo "<form method='post' action='returnBooks.php' style='display:inline-block;'>
+                    <input type='hidden' name='book_id' value='{$book_id}'>
+                    <button type='submit'>Return</button>
+                  </form>";
+        }
 
         echo "</td></tr>";
     }
@@ -76,6 +83,5 @@ echo "</table>";
 
 $conn->close();
 ?>
-
 </body>
 </html>
