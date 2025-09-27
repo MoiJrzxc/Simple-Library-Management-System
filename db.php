@@ -1,8 +1,8 @@
 <?php
-$servername = "db"; // or "localhost" if outside Docker
+$servername = "db"; // or localhost
 $username = "root";
 $password = "rootpassword";
-$dbname = "testdb";
+$dbname = "library_db";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
