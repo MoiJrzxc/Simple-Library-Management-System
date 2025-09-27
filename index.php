@@ -6,8 +6,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($role === "user") {
         header("Location: user.php");
         exit();
-    } elseif ($role === "librarian") {
-        header("Location: librarian.php");
+    } elseif ($role === "manager") {
+        header("Location: manager.php");
         exit();
     }
 }
@@ -16,7 +16,36 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html>
 <head>
     <title>Library Login</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+        }
+        form, table { 
+            margin-bottom: 20px; 
+        }
+        table { 
+            border-collapse: collapse; 
+            width: 80%; 
+        }
+        th, td { 
+            border: 1px solid #ccc; 
+            padding: 8px; 
+            text-align: left; 
+        }
+        th { 
+            background: #eee; 
+        }
+        input[type=text], 
+        input[type=number] { 
+            padding: 5px; 
+            margin: 5px; 
+        }
+        button { 
+            padding: 6px 10px; 
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
@@ -29,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </label>
     <br>
     <label>
-        <input type="radio" name="role" value="librarian" required> Librarian
+        <input type="radio" name="role" value="manager" required> Manager
     </label>
     <br><br>
 
