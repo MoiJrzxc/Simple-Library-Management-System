@@ -1,78 +1,84 @@
-<?php
-// Database connection
-$servername = "db";
-$username = "root";
-$password = "rootpassword";
-$dbname = "testdb";
-$conn = new mysqli(hostname: $servername, username: $username, password: $password, database: $dbname);
+-- Create or select database
+CREATE DATABASE IF NOT EXISTS library_db;
+USE library_db;
 
-// Check connection
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
-?>
+-- Drop existing tables (clean slate)
+DROP TABLE IF EXISTS borrows;
+DROP TABLE IF EXISTS books;
+DROP TABLE IF EXISTS users;
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <title>Book Catalog</title>
-</head>
-<body>
-  <div class="container">
-    <h1>Book Catalog</h1>
+-- Users table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    role ENUM('user','librarian') NOT NULL
+);
 
-    <h2>Add a New Book</h2>
-    <form method="post" action="createBooks.php">
-      <input type="text" name="title" placeholder="Book Title" required>
-      <input type="text" name="author" placeholder="Author" required>
-      <input type="number" name="year" placeholder="Year" required>
-      <button type="submit">Add Book</button>
-    </form>
+-- Books table
+CREATE TABLE books (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    year INT NOT NULL
+);
 
-    <?php
-    // Handle success/error messages
-    if (isset($_GET['success'])) {
-        echo "<p class='message success'>Book added successfully!</p>";
-    }
-    if (isset($_GET['error'])) {
-        echo "<p class='message error'>All fields are required.</p>";
-    }
+-- Borrows table
+CREATE TABLE borrows (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    book_id INT NOT NULL,
+    student_id INT NOT NULL,
+    borrowed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    returned_at DATETIME DEFAULT NULL,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+);
 
-    // Fetch and display books
-    $sql = "SELECT id, title, author, year FROM books";
-    $result = $conn->query($sql);
+-- Insert sample users
+INSERT INTO users (name, role) VALUES
+('Emiel', 'user'),
+('Moises', 'librarian'),
+('Angel', 'user'),
+('Jorick', 'user'),
+('Petter', 'user');
 
-    if ($result->num_rows > 0) {
-      echo "<table>";
-      echo "<tr><th>Title</th><th>Author</th><th>Year</th><th>Actions</th></tr>";
-      while($row = $result->fetch_assoc()) {
-        echo "<tr>";
-        echo "<td>" . htmlspecialchars($row["title"]) . "</td>";
-        echo "<td>" . htmlspecialchars($row["author"]) . "</td>";
-        echo "<td>" . htmlspecialchars($row["year"]) . "</td>";
-        echo "<td class='actions'>
-                <form method='post' action='deleteBooks.php' onsubmit=\"return confirm('Are you sure you want to delete this book?');\">
-                  <input type='hidden' name='id' value='" . $row["id"] . "'>
-                  <button type='submit'>Delete</button>
-                </form>
-                <form method='get' action='editBooks.php'>
-                  <input type='hidden' name='id' value='" . $row["id"] . "'>
-                  <button type='submit'>Edit</button>
-                </form>
-              </td>";
-        echo "</tr>";
-      }
-      echo "</table>";
-    } else {
-      echo "<p>No books available.</p>";
-    }
+-- Insert sample books
+INSERT INTO books (title, author, year) VALUES
+('Harry Potter and the Sorcerer''s Stone', 'J.K. Rowling', 1997),
+('The Hobbit', 'J.R.R. Tolkien', 1937),
+('To Kill a Mockingbird', 'Harper Lee', 1960),
+('1984', 'George Orwell', 1949),
+('Pride and Prejudice', 'Jane Austen', 1813),
+('Test Book 1', 'Author A', 2020),
+('Test Book 2', 'Author B', 2021);
 
-    // Close connection
-    $conn->close();
-    ?>
-  </div>
-</body>
-</html>
+-- Insert borrow history
+-- Book 1 borrowed by Emiel and returned, then borrowed by Angel
+INSERT INTO borrows (book_id, student_id, borrowed_at, returned_at) VALUES
+(1, 1, '2025-09-01 10:00:00', '2025-09-05 12:00:00'),
+(1, 3, '2025-09-10 09:30:00', NULL);
+
+-- Book 2 borrowed by Jorick and returned
+INSERT INTO borrows (book_id, student_id, borrowed_at, returned_at) VALUES
+(2, 4, '2025-09-02 11:00:00', '2025-09-06 14:00:00');
+
+-- Book 3 borrowed by Emiel and returned, then by Petter
+INSERT INTO borrows (book_id, student_id, borrowed_at, returned_at) VALUES
+(3, 1, '2025-09-03 13:00:00', '2025-09-07 16:00:00'),
+(3, 5, '2025-09-08 15:00:00', NULL);
+
+-- Book 4 borrowed by Angel
+INSERT INTO borrows (book_id, student_id, borrowed_at, returned_at) VALUES
+(4, 3, '2025-09-04 14:00:00', NULL);
+
+-- Book 5 borrowed by Jorick and returned
+INSERT INTO borrows (book_id, student_id, borrowed_at, returned_at) VALUES
+(5, 4, '2025-09-05 16:00:00', '2025-09-10 10:00:00');
+
+-- Book 6 (Test Book 1) borrowed by Emiel and returned, then by Jorick
+INSERT INTO borrows (book_id, student_id, borrowed_at, returned_at) VALUES
+(6, 1, '2025-09-06 09:00:00', '2025-09-10 12:00:00'),
+(6, 4, '2025-09-12 10:30:00', NULL);
+
+-- Book 7 (Test Book 2) borrowed by Angel
+INSERT INTO borrows (book_id, student_id, borrowed_at, returned_at) VALUES
+(7, 3, '2025-09-07 11:00:00', NULL);
