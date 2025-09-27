@@ -1,4 +1,5 @@
 <?php include "db.php"; ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,14 +49,14 @@
 
 <h2>Library Catalog</h2>
 <form method="GET" action="">
-    <input type="text" name="search" placeholder="Search by title,or author">
+    <input type="text" name="search" placeholder="Search by title or author">
     <button type="submit">Search</button>
 </form>
 
 <?php
 // Search filter
 $search = "";
-if (isset($_GET['search'])) {
+if (isset($_GET['search']) && $_GET['search'] !== "") {
     $search = $conn->real_escape_string($_GET['search']);
     $sql = "SELECT * FROM books WHERE title LIKE '%$search%' OR author LIKE '%$search%'";
 } else {
@@ -75,21 +76,22 @@ echo "<table>
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         echo "<tr>
-            <td>{$row['title']}</td>
-            <td>{$row['author']}</td>
-            <td>{$row['year']}</td>
+            <td>" . htmlspecialchars($row['title']) . "</td>
+            <td>" . htmlspecialchars($row['author']) . "</td>
+            <td>" . htmlspecialchars($row['year']) . "</td>
             <td>
-                <a href='update.php?id={$row['id']}'>Edit</a> | 
-                <a href='delete.php?id={$row['id']}' onclick='return confirm(\"Are you sure?\")'>Delete</a>
+                <a href='editBooks.php?id=" . $row['id'] . "'>Edit</a> | 
+                <a href='deleteBooks.php?id=" . $row['id'] . "' onclick='return confirm(\"Are you sure?\")'>Delete</a> | 
+                <a href='borrowHistory.php?id=" . $row['id'] . "'>History</a>
             </td>
         </tr>";
     }
 } else {
-    echo "<tr><td colspan='5'>No books found</td></tr>";
+    echo "<tr><td colspan='4'>No books found</td></tr>";
 }
-
 echo "</table>";
-?>
 
+$conn->close();
+?>
 </body>
 </html>
