@@ -3,7 +3,36 @@
 <html>
 <head>
     <title>Library User</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+        }
+        form, table { 
+            margin-bottom: 20px; 
+        }
+        table { 
+            border-collapse: collapse; 
+            width: 80%; 
+        }
+        th, td { 
+            border: 1px solid #ccc; 
+            padding: 8px; 
+            text-align: left; 
+        }
+        th { 
+            background: #eee; 
+        }
+        input[type=text], 
+        input[type=number] { 
+            padding: 5px; 
+            margin: 5px; 
+        }
+        button { 
+            padding: 6px 10px; 
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
@@ -11,7 +40,7 @@
 
 <h2>Search for a Book</h2>
 <form method="GET" action="">
-    <input type="text" name="search" placeholder="Search by title, author, or ISBN">
+    <input type="text" name="search" placeholder="Search by title, or author">
     <button type="submit">Search</button>
 </form>
 
