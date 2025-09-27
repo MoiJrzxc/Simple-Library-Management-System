@@ -38,9 +38,11 @@ if (isset($_GET['id'])) {
             ORDER BY br.borrowed_at DESC";
 }
 
-$result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
+$result = $conn->query($sql);
+if ($result === false) {
+    echo "<p style='color:red;'>SQL Error: " . htmlspecialchars($conn->error) . "</p>";
+} else if ($result->num_rows > 0) {
     echo "<table border='1'>
             <tr>";
     if (!isset($_GET['id'])) echo "<th>Book</th>";
@@ -59,7 +61,7 @@ if ($result->num_rows > 0) {
     }
     echo "</table>";
 } else {
-    echo "<p>No borrow records yet.</p>";
+    echo "<p>No borrow records found for this book or in the system.</p>";
 }
 
 $conn->close();

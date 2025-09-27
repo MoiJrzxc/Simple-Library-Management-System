@@ -13,57 +13,94 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Library Login</title>
     <style>
         body { 
             font-family: Arial, sans-serif; 
-            margin: 20px; 
+            background: #f4f6f9; 
+            margin: 0; 
+            padding: 0;
         }
-        form, table { 
-            margin-bottom: 20px; 
+
+        .container {
+            width: 85%;
+            max-width: 500px;
+            margin: 80px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            text-align: center;
         }
-        table { 
-            border-collapse: collapse; 
-            width: 80%; 
+
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
         }
-        th, td { 
-            border: 1px solid #ccc; 
-            padding: 8px; 
-            text-align: left; 
+
+        h3 {
+            margin-bottom: 15px;
+            color: #444;
         }
-        th { 
-            background: #eee; 
-        }
-        input[type=text], 
-        input[type=number] { 
-            padding: 5px; 
-            margin: 5px; 
-        }
-        button { 
-            padding: 6px 10px; 
+
+        label {
+            display: block;
+            margin: 12px 0;
+            font-size: 16px;
             cursor: pointer;
+        }
+
+        input[type="radio"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+
+        button { 
+            padding: 12px 25px; 
+            margin-top: 20px;
+            border: none;
+            border-radius: 6px;
+            background: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #666;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>📚 Welcome to the Library System</h1>
 
-<h1>Welcome to the Library System</h1>
+        <form method="POST" action="">
+            <h3>Select Role:</h3>
 
-<form method="POST" action="">
-    <h3>Select Role:</h3>
-    <label>
-        <input type="radio" name="role" value="user" required> User
-    </label>
-    <br>
-    <label>
-        <input type="radio" name="role" value="librarian" required> Librarian
-    </label>
-    <br><br>
+            <label>
+                <input type="radio" name="role" value="user" required> User
+            </label>
+            <label>
+                <input type="radio" name="role" value="librarian" required> Librarian
+            </label>
 
-    <button type="submit">Enter</button>
-</form>
+            <button type="submit">Enter</button>
+        </form>
 
+        <div class="footer">
+            © <?= date("Y") ?> Library Management System
+        </div>
+    </div>
 </body>
 </html>
