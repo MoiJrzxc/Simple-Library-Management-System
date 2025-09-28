@@ -37,8 +37,9 @@ $sql = $search
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Library User</title>
     <link rel="stylesheet" href="style.css">
 </head>
