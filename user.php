@@ -2,14 +2,12 @@
 session_start();
 include "db.php";
 
-// Use logged-in user ID from session
-$current_user_id = $_SESSION['user_id'] ?? 1; // fallback for testing
+$current_user_id = $_SESSION['user_id'] ?? 1;
 
 // Borrow a book
 if (isset($_POST['borrowBook'], $_POST['book_id'])) {
     $book_id = (int)$_POST['book_id'];
 
-    // Check if book is currently borrowed
     $check = $conn->query("SELECT * FROM borrows WHERE book_id=$book_id AND returned_at IS NULL");
     if ($check->num_rows == 0) {
         $conn->query("INSERT INTO borrows (book_id, student_id, borrowed_at) VALUES ($book_id, $current_user_id, NOW())");
@@ -32,8 +30,8 @@ if (isset($_POST['returnBook'], $_POST['book_id'])) {
 // Fetch books
 $search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : "";
 $sql = $search
-    ? "SELECT * FROM books WHERE title LIKE '%$search%' OR author LIKE '%$search%'"
-    : "SELECT * FROM books";
+    ? "SELECT * FROM books WHERE deleted=0 AND (title LIKE '%$search%' OR author LIKE '%$search%')"
+    : "SELECT * FROM books WHERE deleted=0";
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
@@ -75,7 +73,6 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()):
         $book_id = $row['id'];
 
-        // Single query to get current borrow status
         $borrow_check = $conn->query("SELECT student_id FROM borrows WHERE book_id=$book_id AND returned_at IS NULL LIMIT 1");
         $isBorrowed = $borrow_check->num_rows > 0;
         $borrowed_by = $isBorrowed ? $borrow_check->fetch_assoc()['student_id'] : null;

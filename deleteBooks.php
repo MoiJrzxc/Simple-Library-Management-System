@@ -1,15 +1,11 @@
 <?php
 header("Content-Type: application/json");
 
-$conn = new mysqli("db", "root", "rootpassword", "testdb");
-if ($conn->connect_error) {
-    echo json_encode(["success" => false, "error" => $conn->connect_error]);
-    exit;
-}
+include "db.php";
 
 if (isset($_GET['id'])) {
     $id = (int) $_GET['id'];
-    $stmt = $conn->prepare("DELETE FROM books WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE books SET deleted=1 WHERE id=?");
     $stmt->bind_param("i", $id);
     $ok = $stmt->execute();
 
