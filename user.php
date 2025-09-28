@@ -40,12 +40,12 @@ $result = $conn->query($sql);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Library User</title>
+    <title>iGit</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
-<h1>Library User</h1>
+<h1>iGit Library User</h1>
 
 <div class="logout">
     <form method="post" action="logout.php">
@@ -90,7 +90,7 @@ if ($result->num_rows > 0) {
         <?php if ($isBorrowed && $borrowed_by == $current_user_id): ?>
             <button type="submit" name="returnBook" class="return">Return</button>
         <?php elseif ($isBorrowed): ?>
-            <button type="button" class="borrow" disabled>Already Borrowed</button>
+            <button type="button" class="borrow" disabled>Unavailable</button>
         <?php else: ?>
             <button type="submit" name="borrowBook" class="borrow">Borrow</button>
         <?php endif; ?>

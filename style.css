@@ -4,80 +4,239 @@ body {
     background: #f0f0f0; /* light gray */
     color: #333;
 }
-.container {
+
+/* Login Page */
+.login-container {
     width: 85%;
-    max-width: 1000px;
-    margin: 50px auto;
-    background: #fff; /* white container */
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
-h1, h2 {
+    max-width: 500px;
+    margin: 80px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     text-align: center;
-    color: #000; /* black */
+}
+
+.login-container h1 {
+    color: #333;
     margin-bottom: 25px;
 }
 
-/* Form Inputs */
-form {
-    margin-bottom: 25px;
-    text-align: center;
+.login-container h3 {
+    margin-bottom: 15px;
+    color: #444;
 }
-input[type="text"], input[type="number"], input[type="search"] {
+
+.login-container label {
+    display: block;
+    margin: 12px 0;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.login-container select {
+    width: 100%;
     padding: 10px;
-    margin: 8px;
+    margin-top: 8px;
     border: 1px solid #ccc;
-    border-radius: 10px;
-    width: calc(30% - 20px);
-}
-input:focus {
-    border-color: #000;
-    box-shadow: 0 0 6px rgba(0,0,0,0.1);
-    outline: none;
+    border-radius: 6px;
+    font-size: 15px;
 }
 
-/* Buttons */
-button {
-    padding: 10px 20px;
-    margin: 5px;
+.login-container button {
+    padding: 12px 25px;
+    margin-top: 20px;
     border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
+    border-radius: 6px;
+    background: #9c3e00;
+    color: white;
+    font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
 }
 
-/* Button Colors */
-button.borrow, button.return, button.back-button { background: #007bff; color: #fff; }
-button.delete { background: #dc3545; color: #fff; }
-button.edit { background: #6c757d; color: #fff; }
-button.history { background: #17a2b8; color: #fff; }
+.login-container button:hover {
+    background: #502000;
+}
 
-/* Table Styles */
+.login-container {
+    max-width: 500px;
+    margin: 80px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.login-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+
+/*librarian and user ui*/
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin-top: 30px;
+    color: #444;
+}
+
+.button-link {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+}
+
+/* Flex layout: search left, history link right */
+form.flex-space-reverse {
+    display: flex;
+    justify-content: space-between; /* search left, link right */
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+form.flex-space-reverse .search-group {
+    display: flex;
+    gap: 6px; /* spacing between input and button */
+}
+
+form.flex-space-reverse .history.button-link {
+    margin: 0; /* remove extra margins */
+}
+
+
+/* Buttons */
+button, .action-link {
+    background: #9c3e00;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    margin: 4px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+button:hover, .action-link:hover {
+    background: #502000;
+}
+
+button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
+
+/* Special button classes */
+.back-button {
+    background: #10abb4;
+}
+
+.add {
+    background: #00939c;
+}
+
+.history {
+    background: #00939c;
+}
+
+.return {
+    background: #9c3e00;
+}
+
+.borrow {
+    background: #00939c;
+}
+
+/* Forms */
+.form-inline input {
+    padding: 6px;
+    margin-right: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Messages */
+.message {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Tables */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 25px;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    margin-top: 20px;
 }
-table th, table td {
-    border: 1px solid #ccc;
-    padding: 12px;
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
     text-align: center;
 }
-table th { background: #007bff; color: #fff; }
-table tr:nth-child(even) { background: #f8f9fa; }
-table tr:hover { background: #e9ecef; }
-.actions form { display: inline-block; margin: 0 3px; }
 
-/* Back Button Form */
-.back-button { margin-top: 20px; }
+th {
+    background: #f2f2f2;
+}
 
-/* Messages */
-.message { margin: 15px 0; font-weight: bold; text-align: center; font-size: 16px; }
-.success { color: #007bff; }
-.error { color: #dc3545; }
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+}
+
+.close-btn {
+    float: right;
+    cursor: pointer;
+    color: #666;
+    font-size: 18px;
+}
