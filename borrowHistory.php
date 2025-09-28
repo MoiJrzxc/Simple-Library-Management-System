@@ -78,11 +78,6 @@ if ($result === false) {
             <tr>";
     if (!isset($_GET['id'])) echo "<th>Book</th>";
     echo "  <th>Student</th>
-    <?php if ($result && $result->num_rows > 0): ?>
-    <table>
-        <tr>
-            <th>Book</th>
-            <th>Borrower</th>
             <th>Borrowed At</th>
             <th>Returned At</th>
           </tr>";
@@ -100,33 +95,5 @@ if ($result === false) {
     echo "<p>No borrow records found for this book or in the system.</p>";
 }
 
-$conn->close();
-?>
-
-<p><a href="librarian.php">⬅ Back to Catalog</a></p>
-
-        </tr>
-        <?php while ($row = $result->fetch_assoc()): ?>
-        <tr>
-            <td><?= htmlspecialchars($row['title']) ?></td>
-            <td><?= htmlspecialchars($row['borrower_name']) ?></td>
-            <td><?= htmlspecialchars($row['borrowed_at']) ?></td>
-            <td><?= htmlspecialchars($row['returned_at'] ?? 'Not Returned') ?></td>
-        </tr>
-        <?php endwhile; ?>
-    </table>
-    <?php else: ?>
-        <p class="message">No borrow records yet.</p>
-    <?php endif; ?>
-
-    <form action="librarian.php">
-        <button type="submit" class="back-button">⬅ Back to Catalog</button>
-    </form>
-</div>
-</body>
-</html>
-
-<?php
-$stmt->close();
 $conn->close();
 ?>

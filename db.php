@@ -9,7 +9,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// --- CREATE TABLES IF NOT EXISTS ---
 $conn->query("
     CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -39,40 +38,43 @@ $conn->query("
     )
 ");
 
-// --- RESET TABLES (to keep IDs consistent) ---
-$conn->query("SET FOREIGN_KEY_CHECKS=0");
-$conn->query("TRUNCATE TABLE borrows");
-$conn->query("TRUNCATE TABLE users");
-$conn->query("TRUNCATE TABLE books");
-$conn->query("SET FOREIGN_KEY_CHECKS=1");
+// --- INSERT SAMPLE DATA ONLY IF TABLES ARE EMPTY ---
+$users_empty = $conn->query("SELECT COUNT(*) AS cnt FROM users")->fetch_assoc()["cnt"] == 0;
+$books_empty = $conn->query("SELECT COUNT(*) AS cnt FROM books")->fetch_assoc()["cnt"] == 0;
+$borrows_empty = $conn->query("SELECT COUNT(*) AS cnt FROM borrows")->fetch_assoc()["cnt"] == 0;
 
-// --- INSERT SAMPLE DATA ---
-$conn->query("INSERT INTO users (name, role) VALUES
-('Moises', 'librarian'),
-('Angel', 'user'),
-('Jorick', 'user'),
-('Petter', 'user'),
-('Angericksesmielter', 'user')");
+if ($users_empty) {
+    $conn->query("INSERT INTO users (name, role) VALUES
+    ('Moises', 'librarian'),
+    ('Angel', 'user'),
+    ('Jorick', 'user'),
+    ('Petter', 'user'),
+    ('Angericksesmielter', 'user')");
+}
 
-$conn->query("INSERT INTO books (title, author, year) VALUES
-('Harry Potter and the Sorcerer''s Stone', 'J.K. Rowling', 1997),
-('The Hobbit', 'J.R.R. Tolkien', 1937),
-('To Kill a Mockingbird', 'Harper Lee', 1960),
-('1984', 'George Orwell', 1949),
-('Pride and Prejudice', 'Jane Austen', 1813),
-('Test Book 1', 'Author A', 2020),
-('Test Book 2', 'Author B', 2021)");
+if ($books_empty) {
+    $conn->query("INSERT INTO books (title, author, year) VALUES
+    ('Harry Potter and the Sorcerer''s Stone', 'J.K. Rowling', 1998),
+    ('The Hobbit', 'J.R.R. Tolkien', 1937),
+    ('To Kill a Mockingbird', 'Harper Lee', 1960),
+    ('1984', 'George Orwell', 1949),
+    ('Pride and Prejudice', 'Jane Austen', 1813),
+    ('Test Book 1', 'Author A', 2020),
+    ('Test Book 2', 'Author B', 2021)");
+}
 
-$conn->query("INSERT INTO borrows (book_id, student_id, borrowed_at, returned_at) VALUES
-(1, 1, '2025-09-01 10:00:00', '2025-09-05 12:00:00'),
-(1, 3, '2025-09-10 09:30:00', NULL),
-(2, 4, '2025-09-02 11:00:00', '2025-09-06 14:00:00'),
-(3, 1, '2025-09-03 13:00:00', '2025-09-07 16:00:00'),
-(3, 5, '2025-09-08 15:00:00', NULL), 
-(4, 3, '2025-09-04 14:00:00', NULL),
-(5, 4, '2025-09-05 16:00:00', '2025-09-10 10:00:00'),
-(6, 1, '2025-09-06 09:00:00', '2025-09-10 12:00:00'),
-(6, 4, '2025-09-12 10:30:00', NULL),
-(7, 3, '2025-09-07 11:00:00', NULL)");
+if ($borrows_empty) {
+    $conn->query("INSERT INTO borrows (book_id, student_id, borrowed_at, returned_at) VALUES
+    (1, 1, '2025-09-01 10:00:00', '2025-09-05 12:00:00'),
+    (1, 3, '2025-09-10 09:30:00', NULL),
+    (2, 4, '2025-09-02 11:00:00', '2025-09-06 14:00:00'),
+    (3, 1, '2025-09-03 13:00:00', '2025-09-07 16:00:00'),
+    (3, 5, '2025-09-08 15:00:00', NULL), 
+    (4, 3, '2025-09-04 14:00:00', NULL),
+    (5, 4, '2025-09-05 16:00:00', '2025-09-10 10:00:00'),
+    (6, 1, '2025-09-06 09:00:00', '2025-09-10 12:00:00'),
+    (6, 4, '2025-09-12 10:30:00', NULL),
+    (7, 3, '2025-09-07 11:00:00', NULL)");
+}
 
 ?>
