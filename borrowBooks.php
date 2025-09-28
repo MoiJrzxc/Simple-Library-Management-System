@@ -5,7 +5,7 @@ if (isset($_POST['book_id'], $_POST['student_name'])) {
     $book_id = (int) $_POST['book_id'];
     $student_name = $conn->real_escape_string($_POST['student_name']);
 
-    // Check if already borrowed
+    // Check if already-borrowed
     $check = $conn->query("SELECT id FROM borrows WHERE book_id=$book_id AND returned_at IS NULL");
     if ($check->num_rows > 0) {
         header("Location: user.php?error=already_borrowed");

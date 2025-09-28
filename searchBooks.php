@@ -1,6 +1,6 @@
 <?php
 include "db.php";
-
+// Handle search request when the form is submitted
 $search = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $search = trim($_POST["search"]);

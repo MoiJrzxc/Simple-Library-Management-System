@@ -27,7 +27,7 @@ if (isset($_POST['returnBook'], $_POST['book_id'])) {
     exit();
 }
 
-// Fetch books
+// Fetch books-
 $search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : "";
 $sql = $search
     ? "SELECT * FROM books WHERE deleted=0 AND (title LIKE '%$search%' OR author LIKE '%$search%')"

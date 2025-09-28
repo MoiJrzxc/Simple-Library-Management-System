@@ -1,5 +1,7 @@
 <?php
 include "db.php";
+
+//Check if form was submitted via POST
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $title = $_POST['title'];
     $author = $_POST['author'];

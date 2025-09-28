@@ -2,7 +2,7 @@
 session_start();
 include "db.php";
 
-// Fetch all users
+// Fetch all users-
 $users = [];
 $result = $conn->query("SELECT id, name, role FROM users ORDER BY role, name");
 while ($row = $result->fetch_assoc()) {
