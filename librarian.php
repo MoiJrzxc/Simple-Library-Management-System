@@ -13,30 +13,30 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'librarian') {
     <meta charset="UTF-8">
     <title>iGit</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="igit.png">
 </head>
 <body>
-<div class="container">
-    <h1>iGit Library Manager</h1>
 
-    <div class="logout">
-        <button onclick="window.location.href='index.php'" class="back-button">Log out</button>
+<!-- Nav Bar -->
+<nav class="navbar">
+    <div class="nav-left">
+        <img src="igit.png" alt="iGit Logo" class="nav-logo">
+        <span class="nav-title">iGit Library Manager</span>
     </div>
+    <div class="nav-right">
+        <a href="#" class="nav-link" onclick="openAddModal()">Add Book</a>
+        <a href="borrowHistory.php" class="nav-link">View Borrow/Return History</a>
+        <a href="index.php" class="nav-link">Log out</a>
+    </div>
+</nav>
 
-    <h2>Add a New Book</h2>
-    <form action="createBooks.php" method="POST" class="form-inline">
-        <input type="text" name="title" placeholder="Title" required>
-        <input type="text" name="author" placeholder="Author" required>
-        <input type="number" name="year" placeholder="Year" required min="1000" max="2025">
-        <button type="submit" class="add">Add Book</button>
-    </form>
-
+<div class="container">
     <h2>Library Catalog</h2>
     <form method="GET" action="" class="form-inline flex-space-reverse">
         <div class="search-group">
             <input type="text" name="search" placeholder="Search by title or author">
             <button type="submit" class="history">Search</button>
         </div>
-        <a href="borrowHistory.php" class="history button-link">View Borrow/Return History</a>
     </form>
 
     <?php
@@ -78,22 +78,43 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'librarian') {
     echo "</table>";
     ?>
 
-    <!-- Modal -->
+    <!-- Edit Modal -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeEditModal()">×</span>
             <div id="editContent">Loading...</div>
         </div>
     </div>
+
+    <!-- Add Modal -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAddModal()">×</span>
+            <h3>Add a New Book</h3>
+            <form id="addForm">
+                <label>Title:
+                    <input type="text" name="title" required>
+                </label>
+                <label>Author:
+                    <input type="text" name="author" required>
+                </label>
+                <label>Year:
+                    <input type="number" name="year" required min="1000" max="2025">
+                </label>
+                <button type="submit">Add Book</button>
+            </form>
+        </div>
+    </div>
 </div>
 
 <script>
+// ---------- EDIT ----------
 function openEditModal(bookId) {
     fetch("editBooks.php?id=" + bookId)
         .then(response => response.text())
         .then(html => {
             document.getElementById("editContent").innerHTML = html;
-            document.getElementById("editModal").style.display = "block";
+            document.getElementById("editModal").classList.add("show");
 
             const form = document.getElementById("editForm");
             if (form) {
@@ -125,11 +146,34 @@ function openEditModal(bookId) {
             }
         });
 }
-
 function closeEditModal() {
-    document.getElementById("editModal").style.display = "none";
+    document.getElementById("editModal").classList.remove("show");
 }
 
+// ---------- ADD ----------
+function openAddModal() {
+    document.getElementById("addModal").classList.add("show");
+}
+function closeAddModal() {
+    document.getElementById("addModal").classList.remove("show");
+}
+
+document.getElementById("addForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch("createBooks.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(() => {
+        // Refresh the page to show new book (simplest option)
+        location.reload();
+    })
+    .catch(err => alert("Error: " + err));
+});
+
+// ---------- DELETE ----------
 function deleteBook(e, id) {
     e.preventDefault();
     if (!confirm("Are you sure?")) return;
@@ -147,5 +191,6 @@ function deleteBook(e, id) {
         .catch(err => alert("Request failed: " + err));
 }
 </script>
+
 </body>
 </html>

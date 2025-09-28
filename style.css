@@ -1,8 +1,12 @@
 /* General Styles */
-body {
+html, body {
     font-family: 'Poppins', sans-serif;
     background: #f0f0f0; /* light gray */
     color: #333;
+
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 /* Login Page */
@@ -48,7 +52,7 @@ body {
     margin-top: 20px;
     border: none;
     border-radius: 6px;
-    background: #9c3e00;
+    background: #00939c;
     color: white;
     font-weight: bold;
     cursor: pointer;
@@ -82,6 +86,54 @@ body {
     height: 50px;
     object-fit: contain;
 }
+
+/* Nav Bar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 10px 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-logo {
+    height: 40px;
+    width: auto;
+}
+
+.nav-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.nav-right {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-link {
+    color: #fff;
+    background: #00939c;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.3s;
+    font-size: 14px;
+}
+
+.nav-link:hover {
+    background: #502000;
+}
+
 
 
 /*librarian and user ui*/
@@ -133,7 +185,7 @@ form.flex-space-reverse .history.button-link {
 
 /* Buttons */
 button, .action-link {
-    background: #9c3e00;
+    background: #00939c;
     color: white;
     border: none;
     padding: 6px 12px;
@@ -216,27 +268,126 @@ th {
     background: #f2f2f2;
 }
 
-/* Modal */
+/* Modal overlay (dark background) */
 .modal {
-    display: none;
+    display: none;               /* hidden by default */
     position: fixed;
-    z-index: 999;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6);
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6); /* semi-transparent backdrop */
+    justify-content: center;     /* center child horizontally */
+    align-items: center;         /* center child vertically */
 }
 
+.modal.show {
+    display: flex;
+}
+
+
+/* The modal box itself */
 .modal-content {
     background: #fff;
-    margin: 10% auto;
-    padding: 20px;
-    border-radius: 8px;
+    padding: 20px 30px;
+    border-radius: 10px;
     width: 400px;
+    max-width: 90%;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    position: relative;
+    animation: fadeInScale 0.25s ease-in-out;
 }
 
+/* Close button (the little ×) */
 .close-btn {
-    float: right;
-    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    font-weight: bold;
     color: #666;
-    font-size: 18px;
+    cursor: pointer;
 }
+
+.close-btn:hover {
+    color: #000;
+}
+
+#editForm {
+    text-align: center; /* center inline elements like labels/buttons */
+}
+
+#editForm label {
+    display: block;
+    text-align: left; /* keep labels aligned left for readability */
+    margin: 10px auto;
+    max-width: 300px; /* prevent full width stretching */
+}
+
+#editForm input {
+    display: block;
+    width: 100%;
+    max-width: 300px; /* nice balanced width */
+    margin: 5px auto; /* centers input inside modal */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#editForm button {
+    display: block;
+    margin: 15px auto 0 auto; /* center the button */
+}
+
+
+#editForm button:hover {
+    background: #005fa3;
+}
+
+/* Pop effect when modal shows */
+@keyframes fadeInScale {
+    from { transform: scale(0.9); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+/* Add Book Modal Fix */
+#addForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* centers inputs horizontally */
+    gap: 12px;             /* even spacing between inputs */
+}
+
+#addForm label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 80%;            /* same width as edit form fields */
+    max-width: 400px;
+    font-weight: 500;
+}
+
+#addForm input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 4px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+#addForm button {
+    margin-top: 10px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: #00939c;
+    color: #fff;
+    cursor: pointer;
+}
+
+#addForm button:hover {
+    background-color: #502000;
+}
+
