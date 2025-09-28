@@ -59,8 +59,8 @@ if ($books_empty) {
     ('To Kill a Mockingbird', 'Harper Lee', 1960),
     ('1984', 'George Orwell', 1949),
     ('Pride and Prejudice', 'Jane Austen', 1813),
-    ('Test Book 1', 'Author A', 2020),
-    ('Test Book 2', 'Author B', 2021)");
+    ('Feminism a Way of Life', 'Jorick F.', 2025),
+    ('Matcha', 'Jorick F.', 2025)");
 }
 
 if ($borrows_empty) {
