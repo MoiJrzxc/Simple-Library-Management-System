@@ -1,5 +1,18 @@
-<?php include "db.php"; ?>
+<?php
+session_start();
+include "db.php";
 
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'librarian') {
+    header("Location: index.php");
+    exit();
+}
+
+$search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : "";
+$sql = $search
+    ? "SELECT * FROM books WHERE title LIKE '%$search%' OR author LIKE '%$search%'"
+    : "SELECT * FROM books";
+$result = $conn->query($sql);
+?>
 <!DOCTYPE html>
 <html>
 

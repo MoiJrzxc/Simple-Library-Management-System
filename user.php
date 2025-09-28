@@ -1,206 +1,110 @@
-<?php include "db.php"; ?>
+<?php
+session_start();
+include "db.php";
 
+// Use logged-in user ID from session
+$current_user_id = $_SESSION['user_id'] ?? 1; // fallback for testing
+
+// Borrow a book
+if (isset($_POST['borrowBook'], $_POST['book_id'])) {
+    $book_id = (int)$_POST['book_id'];
+
+    // Check if book is currently borrowed
+    $check = $conn->query("SELECT * FROM borrows WHERE book_id=$book_id AND returned_at IS NULL");
+    if ($check->num_rows == 0) {
+        $conn->query("INSERT INTO borrows (book_id, student_id, borrowed_at) VALUES ($book_id, $current_user_id, NOW())");
+        header("Location: user.php?success=borrowed");
+        exit();
+    } else {
+        header("Location: user.php?error=already_borrowed");
+        exit();
+    }
+}
+
+// Return a book
+if (isset($_POST['returnBook'], $_POST['book_id'])) {
+    $book_id = (int)$_POST['book_id'];
+    $conn->query("UPDATE borrows SET returned_at=NOW() WHERE book_id=$book_id AND student_id=$current_user_id AND returned_at IS NULL LIMIT 1");
+    header("Location: user.php?success=returned");
+    exit();
+}
+
+// Fetch books
+$search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : "";
+$sql = $search
+    ? "SELECT * FROM books WHERE title LIKE '%$search%' OR author LIKE '%$search%'"
+    : "SELECT * FROM books";
+$result = $conn->query($sql);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Library User</title>
-    <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            background: #f4f6f9; 
-            margin: 0; 
-            padding: 0;
-        }
-
-        .container {
-            width: 85%;
-            max-width: 1000px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 25px;
-        }
-
-        h2 {
-            color: #444;
-            margin-top: 20px;
-        }
-
-        form {
-            margin: 15px 0;
-        }
-
-        input[type=text], input[type=number] { 
-            padding: 10px; 
-            margin: 5px;
-            width: 250px;
-            border: 1px solid #ccc; 
-            border-radius: 5px; 
-        }
-
-        button { 
-            padding: 10px 18px; 
-            margin: 5px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            opacity: 0.9;
-        }
-
-        .btn-primary {
-            background: #007bff;
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-
-        .message {
-            margin: 10px 0;
-            font-weight: bold;
-        }
-
-        .success {
-            color: green;
-        }
-
-        .error {
-            color: red;
-        }
-
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 20px; 
-        }
-
-        th, td { 
-            border: 1px solid #ddd; 
-            padding: 12px; 
-            text-align: center; 
-        }
-
-        th { 
-            background: #007bff; 
-            color: white; 
-        }
-
-        tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-
-        tr:hover {
-            background: #f1f1f1;
-        }
-
-        .actions form {
-            display: inline-block;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
-    <h1>📚 Library User</h1>
+<h1>Library User</h1>
 
-    <form action="index.php" method="get">
-        <button type="submit" class="btn-secondary">⬅ Back to Role Selection</button>
+<div class="logout">
+    <form method="post" action="logout.php">
+        <button type="submit" class="back-button">Logout</button>
     </form>
+</div>
 
-    <?php
-    if (isset($_GET['success'])) {
-        echo "<p class='message success'>✅ Book borrowed successfully!</p>";
-    }
-    if (isset($_GET['error']) && $_GET['error'] === 'already_borrowed') {
-        echo "<p class='message error'>⚠️ This book is already borrowed.</p>";
-    }
-    ?>
+<?php
+if (isset($_GET['success'])) {
+    if ($_GET['success'] === 'borrowed') echo "<p class='message success'>Book borrowed successfully!</p>";
+    if ($_GET['success'] === 'returned') echo "<p class='message success'>Book returned successfully!</p>";
+}
+if (isset($_GET['error']) && $_GET['error'] === 'already_borrowed')
+    echo "<p class='message error'>This book is already borrowed.</p>";
+?>
 
-    <h2>🔍 Search for a Book</h2>
-    <form method="GET" action="">
-        <input type="text" name="search" placeholder="Search by title or author">
-        <button type="submit" class="btn-primary">Search</button>
+<h2>Search for a Book</h2>
+<form method="GET">
+    <input type="text" name="search" placeholder="Search by title or author" value="<?= htmlspecialchars($search) ?>">
+    <button type="submit" class="history">Search</button>
+</form>
+
+<table>
+<tr><th>Title</th><th>Author</th><th>Year</th><th>Action</th></tr>
+<?php
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()):
+        $book_id = $row['id'];
+
+        // Single query to get current borrow status
+        $borrow_check = $conn->query("SELECT student_id FROM borrows WHERE book_id=$book_id AND returned_at IS NULL LIMIT 1");
+        $isBorrowed = $borrow_check->num_rows > 0;
+        $borrowed_by = $isBorrowed ? $borrow_check->fetch_assoc()['student_id'] : null;
+?>
+<tr>
+<td><?= htmlspecialchars($row['title']) ?></td>
+<td><?= htmlspecialchars($row['author']) ?></td>
+<td><?= htmlspecialchars($row['year']) ?></td>
+<td>
+    <form method="post">
+        <input type="hidden" name="book_id" value="<?= $book_id ?>">
+        <?php if ($isBorrowed && $borrowed_by == $current_user_id): ?>
+            <button type="submit" name="returnBook" class="return">Return</button>
+        <?php elseif ($isBorrowed): ?>
+            <button type="button" class="borrow" disabled>Already Borrowed</button>
+        <?php else: ?>
+            <button type="submit" name="borrowBook" class="borrow">Borrow</button>
+        <?php endif; ?>
     </form>
-
-    <?php
-    $search = "";
-    if (isset($_GET['search']) && $_GET['search'] !== "") {
-        $search = $conn->real_escape_string($_GET['search']);
-        $sql = "SELECT * FROM books WHERE title LIKE '%$search%' OR author LIKE '%$search%'";
-    } else {
-        $sql = "SELECT * FROM books";
-    }
-
-    $result = $conn->query($sql);
-
-    echo "<table>
-    <tr>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Year</th>
-        <th>Action</th>
-    </tr>";
-
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $book_id = $row['id'];
-
-            // Check if this book is currently borrowed
-            $borrow_check = $conn->query("SELECT id FROM borrows WHERE book_id=$book_id AND returned_at IS NULL");
-            $isBorrowed = $borrow_check->num_rows > 0;
-
-            echo "<tr>
-                <td>" . htmlspecialchars($row['title']) . "</td>
-                <td>" . htmlspecialchars($row['author']) . "</td>
-                <td>" . htmlspecialchars($row['year']) . "</td>
-                <td class='actions'>";
-
-            if (!$isBorrowed) {
-                                echo "<form method='post' action='borrowBooks.php' style='display:inline-block;'>
-                                                <input type='hidden' name='book_id' value='{$book_id}'>
-                                                <input type='text' name='student_name' placeholder='Your Name' required style='width:120px; margin-right:5px;'>
-                                                <button type='submit' class='btn-success'>Borrow</button>
-                                            </form>";
-            } else {
-                echo "<form method='post' action='returnBooks.php'>
-                        <input type='hidden' name='book_id' value='{$book_id}'>
-                        <button type='submit' class='btn-danger'>Return</button>
-                      </form>";
-            }
-
-            echo "</td></tr>";
-        }
-    } else {
-        echo "<tr><td colspan='4'>No books found</td></tr>";
-    }
-    echo "</table>";
-
-    $conn->close();
-    ?>
+</td>
+</tr>
+<?php
+    endwhile;
+} else {
+    echo "<tr><td colspan='4'>No books found</td></tr>";
+}
+$conn->close();
+?>
+</table>
 </div>
 </body>
 </html>

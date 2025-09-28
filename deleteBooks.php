@@ -1,14 +1,11 @@
 <?php
-$conn = new mysqli("db", "root", "rootpassword", "testdb");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+include "db.php";
 if (isset($_POST['id'])) {
-    $id = (int) $_POST['id']; // cast to int, keeps it clean
-    $conn->query("DELETE FROM books WHERE id=$id");
+    $id = (int)$_POST['id'];
+    $stmt = $conn->prepare("DELETE FROM books WHERE id=?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
 }
-
-header("Location: library.php");
-exit;
+header("Location: librarian.php");
+exit();
 ?>
