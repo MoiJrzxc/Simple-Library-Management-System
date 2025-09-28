@@ -2,7 +2,6 @@
 session_start();
 include "db.php";
 
-// Librarian-only access
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'librarian') {
     header("Location: index.php");
     exit();
@@ -43,10 +42,10 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'librarian') {
     <?php
     if (isset($_GET['search']) && $_GET['search'] !== "") {
         $search = "%{$_GET['search']}%";
-        $stmt = $conn->prepare("SELECT id, title, author, year FROM books WHERE title LIKE ? OR author LIKE ?");
+        $stmt = $conn->prepare("SELECT id, title, author, year FROM books WHERE deleted=0 AND (title LIKE ? OR author LIKE ?)");
         $stmt->bind_param("ss", $search, $search);
     } else {
-        $stmt = $conn->prepare("SELECT id, title, author, year FROM books");
+        $stmt = $conn->prepare("SELECT id, title, author, year FROM books WHERE deleted=0");
     }
     $stmt->execute();
     $result = $stmt->get_result();

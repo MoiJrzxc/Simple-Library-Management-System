@@ -1,5 +1,5 @@
 <?php
-$servername = "db"; // or "localhost"
+$servername = "db"; 
 $username   = "root";
 $password   = "rootpassword";
 $dbname     = "library_db";
@@ -9,6 +9,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// USERS TABLE
 $conn->query("
     CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -17,15 +18,25 @@ $conn->query("
     )
 ");
 
+// BOOKS TABLE (added deleted flag)
 $conn->query("
     CREATE TABLE IF NOT EXISTS books (
         id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         author VARCHAR(100),
-        year INT
+        year INT,
+        deleted TINYINT(1) DEFAULT 0
     )
 ");
 
+// Ensure 'deleted' column exists
+$check_col = $conn->query("SHOW COLUMNS FROM books LIKE 'deleted'");
+if ($check_col->num_rows == 0) {
+    $conn->query("ALTER TABLE books ADD COLUMN deleted TINYINT(1) DEFAULT 0 AFTER year");
+}
+
+
+// BORROWS TABLE
 $conn->query("
     CREATE TABLE IF NOT EXISTS borrows (
         id INT AUTO_INCREMENT PRIMARY KEY,
