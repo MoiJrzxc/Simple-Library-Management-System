@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json");
+header("Content-Type: application/json");// Response will be in JSON format
 
 include "db.php";
 

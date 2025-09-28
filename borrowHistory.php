@@ -2,7 +2,7 @@
 include "db.php";
 session_start();
 
-// If not logged in, kick out
+// If not logged in, kick-out
 if (!isset($_SESSION['role'])) {
     header("Location: index.php");
     exit();

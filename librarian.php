@@ -108,7 +108,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'librarian') {
 </div>
 
 <script>
-// ---------- EDIT ----------
+// ---------- EDIT -----------
 function openEditModal(bookId) {
     fetch("editBooks.php?id=" + bookId)
         .then(response => response.text())

@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["id"])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["id"])) {
-    header("Content-Type: application/json");
+    header("Content-Type: application/json"); // Set response type to JSON
 
     $id = (int) $_POST["id"];
     $title = trim($_POST["title"] ?? "");
