@@ -41,6 +41,7 @@ $conn->close();
     <meta charset="UTF-8">
     <title>iGit</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="igit.png">
 </head>
 
 <body>

@@ -40,16 +40,22 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <title>iGit</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="igit.png">
 </head>
 <body>
-<div class="container">
-<h1>iGit Library User</h1>
 
-<div class="logout">
-    <form method="post" action="logout.php">
-        <button type="submit" class="back-button">Logout</button>
-    </form>
-</div>
+<!-- Nav Bar -->
+<nav class="navbar">
+    <div class="nav-left">
+        <img src="igit.png" alt="iGit Logo" class="nav-logo">
+        <span class="nav-title">iGit Library User</span>
+    </div>
+    <div class="nav-right">
+        <a href="logout.php" class="nav-link">Log out</a>
+    </div>
+</nav>
+
+<div class="container">
 
 <?php
 if (isset($_GET['success'])) {
@@ -60,7 +66,7 @@ if (isset($_GET['error']) && $_GET['error'] === 'already_borrowed')
     echo "<p class='message error'>This book is already borrowed.</p>";
 ?>
 
-<h2>Search for a Book</h2>
+<h2>Library Catalog</h2>
 <form method="GET">
     <input type="text" name="search" placeholder="Search by title or author" value="<?= htmlspecialchars($search) ?>">
     <button type="submit" class="history">Search</button>
